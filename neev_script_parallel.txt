@@ -1,0 +1,34 @@
+set designer "Tom Cruise"
+set company "KTH"
+set search_path "${SynopsysHome}/libraries/syn"
+set target_library "tcbn90gtc.db"
+set symbol_library "tcbn90g.sdb"
+set link_path "$search_path"
+
+source ./../synopsys_dc.setup
+
+analyze -format vhdl -lib work ./rtl/types_and_constants.vhd
+analyze -format vhdl -lib work ./rtl/rom_coefficients.vhd
+analyze -format vhdl -lib work ./rtl/mac.vhd
+analyze -format vhdl -lib work ./rtl/arithmetic_unit.vhd
+analyze -format vhdl -lib work ./rtl/fsm.vhd
+analyze -format vhdl -lib work ./rtl/shift_register.vhd
+analyze -format vhdl -lib work ./rtl/parallel_fir.vhd
+analyze -format vhdl -lib work ./tb/parallel_fir_tb.vhd
+
+elaborate parallel_fir -architecture structure -library default
+
+set_wire_load_mode top
+set_wire_load_model -name "TSMC8K_Lowk_Conservative"
+set_operating_conditions "NCCOM"
+create_clock -name "clk" -period 5 -waveform { 0 2.5 } { clk }
+set_false_path -from [get_port nrst]
+
+compile -map_effort medium
+write -hierarchy -format verilog -output "./syn/db/output.v"
+
+report_constraints > ./syn/rpt/constraints.txt
+report_cell > ./syn/rpt/cell.txt
+report_area > ./syn/rpt/area.txt
+report_power > ./syn/rpt/power.txt
+report_timing > ./syn/rpt/timing.txt

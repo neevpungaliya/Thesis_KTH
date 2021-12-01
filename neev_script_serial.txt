@@ -1,0 +1,154 @@
+set designer "Tom Cruise"
+set company "KTH"
+set search_path "${SynopsysHome}/libraries/syn"
+set target_library "tcbn90gtc.db"
+set symbol_library "tcbn90g.sdb"
+set link_path "$search_path"
+
+source ./../synopsys_dc.setup
+
+analyze -format vhdl -lib work ./rtl/types_and_constants.vhd
+analyze -format vhdl -lib work ./rtl/rom_coefficients.vhd
+analyze -format vhdl -lib work ./rtl/delay_line.vhd
+analyze -format vhdl -lib work ./rtl/mac.vhd
+analyze -format vhdl -lib work ./rtl/arithmetic_unit.vhd
+analyze -format vhdl -lib work ./rtl/fsm.vhd
+analyze -format vhdl -lib work ./rtl/serial_fir.vhd
+analyze -format vhdl -lib work ./tb/serial_fir_tb.vhd
+
+elaborate serial_fir -architecture structural -library default
+
+set_wire_load_mode top
+set_wire_load_model -name "TSMC8K_Lowk_Conservative"
+set_operating_conditions "NCCOM"
+create_clock -name "clk" -period 5 -waveform { 0 2.5 } { clk }
+set_false_path -from [get_port nrst]
+
+compile -map_effort medium
+write -hierarchy -format verilog -output "./syn/db/output.v"
+
+report_constraints > ./syn/rpt/constraints.txt
+report_cell > ./syn/rpt/cell.txt
+report_area > ./syn/rpt/area.txt
+report_power > ./syn/rpt/power.txt
+report_timing > ./syn/rpt/timing.txt
+
+
+
+
+cd afs/it.kth.se/pkg/synopsys/extra_libraries/standard_cell/TSMC/tcbn90g_110a/Front_End/timing_power/tcbn90g_110a/
+
+wire_load("TSMC8K_Lowk_Conservative") {
+resistance : 0.00001 ;
+capacitance : 1 ;
+area : 0
+slope : 0.0019
+fanout_length(1,0.0013)
+fanout_length(2,0.0031)
+fanout_length(3,0.0050)
+fanout_length(4,0.0069)
+fanout_length(5,0.0088)
+fanout_length(6,0.0107)
+fanout_length(7,0.0125)
+fanout_length(8,0.0144)
+fanout_length(9,0.0163)
+fanout_length(10,0.0182)
+}
+wire_load("TSMC16K_Lowk_Conservative") {
+resistance : 0.00001 ;
+capacitance : 1 ;
+area : 0
+slope : 0.0020
+fanout_length(1,0.0013)
+fanout_length(2,0.0033)
+fanout_length(3,0.0053)
+fanout_length(4,0.0074)
+fanout_length(5,0.0094)
+fanout_length(6,0.0114)
+fanout_length(7,0.0135)
+fanout_length(8,0.0155)
+fanout_length(9,0.0176)
+fanout_length(10,0.0195)
+}
+wire_load("TSMC32K_Lowk_Conservative") {
+resistance : 0.00001 ;
+capacitance : 1 ;
+area : 0
+slope : 0.0023
+fanout_length(1,0.0013)
+fanout_length(2,0.0036)
+fanout_length(3,0.0059)
+fanout_length(4,0.0083)
+fanout_length(5,0.0106)
+fanout_length(6,0.0129)
+fanout_length(7,0.0153)
+fanout_length(8,0.0176)
+fanout_length(9,0.0199)
+fanout_length(10,0.0223)
+}
+wire_load("TSMC64K_Lowk_Conservative") {
+resistance : 0.00001 ;
+capacitance : 1 ;
+area : 0
+slope : 0.0029
+fanout_length(1,0.0013)
+fanout_length(2,0.0042)
+fanout_length(3,0.0070)
+fanout_length(4,0.0098)
+fanout_length(5,0.0127)
+fanout_length(6,0.0156)
+fanout_length(7,0.0185)
+fanout_length(8,0.0213)
+fanout_length(9,0.0242)
+fanout_length(10,0.0271)
+}
+wire_load("TSMC128K_Lowk_Conservative") {
+resistance : 0.00001 ;
+capacitance : 1 ;
+area : 0
+slope : 0.0037
+fanout_length(1,0.0014)
+fanout_length(2,0.0050)
+fanout_length(3,0.0088)
+fanout_length(4,0.0125)
+fanout_length(5,0.0162)
+fanout_length(6,0.0199)
+fanout_length(7,0.0236)
+fanout_length(8,0.0273)
+fanout_length(9,0.0310)
+fanout_length(10,0.0348)
+}
+wire_load("TSMC256K_Lowk_Conservative") {
+resistance : 0.00001 ;
+capacitance : 1 ;
+area : 0
+slope : 0.0057
+fanout_length(1,0.0014)
+fanout_length(2,0.0070)
+fanout_length(3,0.0127)
+fanout_length(4,0.0184)
+fanout_length(5,0.0240)
+fanout_length(6,0.0298)
+fanout_length(7,0.0355)
+fanout_length(8,0.0411)
+fanout_length(9,0.0468)
+fanout_length(10,0.0525)
+}
+wire_load("TSMC512K_Lowk_Conservative") {
+resistance : 0.00001 ;
+capacitance : 1 ;
+area : 0
+slope : 0.0096
+fanout_length(1,0.0016)
+fanout_length(2,0.0111)
+fanout_length(3,0.0207)
+fanout_length(4,0.0303)
+fanout_length(5,0.0399)
+fanout_length(6,0.0495)
+fanout_length(7,0.0590)
+fanout_length(8,0.0687)
+fanout_length(9,0.0782)
+fanout_length(10,0.0879)
+}
+
+
